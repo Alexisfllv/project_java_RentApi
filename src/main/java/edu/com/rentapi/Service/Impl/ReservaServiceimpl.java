@@ -5,6 +5,7 @@ import edu.com.rentapi.Dto.PlanoReservaResponseDTO;
 import edu.com.rentapi.Dto.ReservaRequestDTO;
 import edu.com.rentapi.Dto.ReservaResponseDTO;
 import edu.com.rentapi.Entity.EstadoHabitacion;
+import edu.com.rentapi.Entity.EstadoReserva;
 import edu.com.rentapi.Entity.Habitacion;
 import edu.com.rentapi.Entity.Reserva;
 import edu.com.rentapi.Mapper.HabitacionMapper;
@@ -17,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -37,7 +38,7 @@ public class ReservaServiceimpl implements ReservaService {
     public ReservaResponseDTO crearReserva(ReservaRequestDTO reservaRequestDTO) {
         Reserva reserva =  reservaMapper.toReserva(reservaRequestDTO);
 
-        reserva.setEstado(EstadoHabitacion.RESERVADA);
+        reserva.setEstado(EstadoReserva.REALIZADA);
         reserva.setClienteNombre(reservaRequestDTO.clienteNombre());
         reserva.setClienteDni(reservaRequestDTO.clienteDni());
         reserva.setFechaInicio(reservaRequestDTO.fechaInicio());
@@ -70,12 +71,14 @@ public class ReservaServiceimpl implements ReservaService {
     public PlanoReservaResponseDTO crearReservaPlana(ReservaRequestDTO reservaRequestDTO) {
         Reserva reserva =  reservaMapper.toReserva(reservaRequestDTO);
 
-        reserva.setEstado(EstadoHabitacion.RESERVADA);
         reserva.setClienteNombre(reservaRequestDTO.clienteNombre());
         reserva.setClienteDni(reservaRequestDTO.clienteDni());
         reserva.setFechaInicio(reservaRequestDTO.fechaInicio());
         reserva.setFechaFin(reservaRequestDTO.fechaFin());
         reserva.setComentarios(reservaRequestDTO.comentarios());
+        //
+        reserva.setFechaCreacion(LocalDateTime.now());
+
 
         // habitacion
         Habitacion habitacion = habitacionRepository.findById(reservaRequestDTO.habitacionId())
@@ -88,6 +91,7 @@ public class ReservaServiceimpl implements ReservaService {
         }
 
 
+        log.info("estado :"+ reserva.getEstado());
         habitacion.setEstado(EstadoHabitacion.RESERVADA);
         habitacionRepository.save(habitacion);
 
@@ -115,6 +119,26 @@ public class ReservaServiceimpl implements ReservaService {
         Reserva reserva  =reservaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reserva no encontrada :"+id));
         return reservaMapper.toPlanoReservaResponseDto(reserva);
+    }
+
+    @Override
+    public PlanoReservaResponseDTO culminarReserva(Long id) {
+        Reserva reservaExistente = reservaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Reserva no encontrada :"+id));
+
+        reservaExistente.setFechaCulminada(LocalDateTime.now());
+        reservaExistente.setEstado(EstadoReserva.CULMINADA);
+
+        // habitacion
+        if (reservaExistente.getHabitacion().getEstado().equals(EstadoHabitacion.DISPONIBLE)) {
+            log.warn("Habitacion estado :"+reservaExistente.getHabitacion().getEstado());
+            throw new RuntimeException(" la habitacion ya se encuentra disponible:"+ reservaExistente.getHabitacion().getEstado());
+
+        }
+        reservaExistente.getHabitacion().setEstado(EstadoHabitacion.DISPONIBLE);
+
+        reservaRepository.save(reservaExistente);
+        return reservaMapper.toPlanoReservaResponseDto(reservaExistente);
     }
 
 

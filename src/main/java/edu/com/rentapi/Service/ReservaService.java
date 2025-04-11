@@ -21,4 +21,7 @@ public interface ReservaService {
 
     // busqueda de reservas
     PlanoReservaResponseDTO buscarReserva(Long id);
+
+    // culminar reserva
+    PlanoReservaResponseDTO culminarReserva(Long id);
 }

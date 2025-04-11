@@ -42,4 +42,9 @@ public class RerservaController {
     public ResponseEntity<PlanoReservaResponseDTO> buscarReserva(@PathVariable Long id) {
         return ResponseEntity.ok(reservaService.buscarReserva(id));
     }
+
+    @PostMapping("culminar/{id}")
+    public ResponseEntity<PlanoReservaResponseDTO> culminarReserva(@PathVariable Long id) {
+        return ResponseEntity.ok(reservaService.culminarReserva(id));
+    }
 }

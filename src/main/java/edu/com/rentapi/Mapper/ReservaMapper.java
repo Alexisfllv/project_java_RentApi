@@ -25,8 +25,10 @@ public interface ReservaMapper {
     // plano
     @Mapping(target = "habitacionNumero", source = "habitacion.numero")
     @Mapping(target = "habitacionTipo", source = "habitacion.tipo")
-    @Mapping(target = "estado", source = "habitacion.estado")
+    @Mapping(target = "estadoReserva", source = "estado")
     @Mapping(target = "reservaId", source = "id")
+    @Mapping(target = "fechaCreacion", source = "fechaCreacion")
+    @Mapping(target = "fechaCulminada", source = "fechaCulminada")
     PlanoReservaResponseDTO toPlanoReservaResponseDto(Reserva reserva);
 
 }

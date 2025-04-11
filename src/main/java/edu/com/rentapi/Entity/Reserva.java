@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Data
@@ -41,8 +42,14 @@ public class Reserva {
     @Column(name = "comentarios")
     private String comentarios;
 
+    @Column(name = "fecha_creacion")
+    private LocalDateTime fechaCreacion;
+
+    @Column(name = "fecha_culminada")
+    private LocalDateTime fechaCulminada;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
-    private EstadoHabitacion estado = EstadoHabitacion.RESERVADA; // Reutilizas el enum para saber si está RESERVADA, etc.
+    private EstadoReserva estado = EstadoReserva.REALIZADA; // Reutilizas el enum para saber si está RESERVADA, etc.
 
 }
