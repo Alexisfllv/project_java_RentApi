@@ -8,6 +8,7 @@ import edu.com.rentapi.Entity.EstadoHabitacion;
 import edu.com.rentapi.Entity.EstadoReserva;
 import edu.com.rentapi.Entity.Habitacion;
 import edu.com.rentapi.Entity.Reserva;
+import edu.com.rentapi.Exception.ResourceNotFoundException;
 import edu.com.rentapi.Mapper.HabitacionMapper;
 import edu.com.rentapi.Mapper.ReservaMapper;
 import edu.com.rentapi.Repo.HabitacionRepository;
@@ -47,11 +48,11 @@ public class ReservaServiceimpl implements ReservaService {
 
         // habitacion
         Habitacion habitacion = habitacionRepository.findById(reservaRequestDTO.habitacionId())
-                .orElseThrow(() -> new RuntimeException("Habitacion no encontrada :"+reservaRequestDTO.habitacionId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Habitacion no encontrada :"+reservaRequestDTO.habitacionId()));
 
         if (!habitacion.getEstado().equals(EstadoHabitacion.DISPONIBLE)) {
             log.warn("Habitacion estado :"+habitacion.getEstado());
-            throw new RuntimeException(" la habitacion no esta disponible par reservar :"+ habitacion.getEstado());
+            throw new ResourceNotFoundException(" la habitacion no esta disponible par reservar :"+ habitacion.getEstado());
 
         }
 
@@ -68,6 +69,7 @@ public class ReservaServiceimpl implements ReservaService {
     }
 
     @Override
+    @Transactional
     public PlanoReservaResponseDTO crearReservaPlana(ReservaRequestDTO reservaRequestDTO) {
         Reserva reserva =  reservaMapper.toReserva(reservaRequestDTO);
 
@@ -82,11 +84,11 @@ public class ReservaServiceimpl implements ReservaService {
 
         // habitacion
         Habitacion habitacion = habitacionRepository.findById(reservaRequestDTO.habitacionId())
-                .orElseThrow(() -> new RuntimeException("Habitacion no encontrada :"+reservaRequestDTO.habitacionId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Habitacion no encontrada :"+reservaRequestDTO.habitacionId()));
 
         if (!habitacion.getEstado().equals(EstadoHabitacion.DISPONIBLE)) {
             log.warn("Habitacion estado :"+habitacion.getEstado());
-            throw new RuntimeException(" la habitacion no esta disponible par reservar :"+ habitacion.getEstado());
+            throw new ResourceNotFoundException(" la habitacion no esta disponible para reservar :"+ habitacion.getEstado());
 
         }
 
@@ -117,14 +119,15 @@ public class ReservaServiceimpl implements ReservaService {
     @Override
     public PlanoReservaResponseDTO buscarReserva(Long id) {
         Reserva reserva  =reservaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reserva no encontrada :"+id));
+                .orElseThrow(() -> new ResourceNotFoundException("Reserva no encontrada :"+id));
         return reservaMapper.toPlanoReservaResponseDto(reserva);
     }
 
     @Override
+    @Transactional
     public PlanoReservaResponseDTO culminarReserva(Long id) {
         Reserva reservaExistente = reservaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reserva no encontrada :"+id));
+                .orElseThrow(() -> new ResourceNotFoundException("Reserva no encontrada :"+id));
 
         reservaExistente.setFechaCulminada(LocalDateTime.now());
         reservaExistente.setEstado(EstadoReserva.CULMINADA);
@@ -132,7 +135,7 @@ public class ReservaServiceimpl implements ReservaService {
         // habitacion
         if (reservaExistente.getHabitacion().getEstado().equals(EstadoHabitacion.DISPONIBLE)) {
             log.warn("Habitacion estado :"+reservaExistente.getHabitacion().getEstado());
-            throw new RuntimeException(" la habitacion ya se encuentra disponible:"+ reservaExistente.getHabitacion().getEstado());
+            throw new ResourceNotFoundException(" la habitacion ya se encuentra disponible:"+ reservaExistente.getHabitacion().getEstado());
 
         }
         reservaExistente.getHabitacion().setEstado(EstadoHabitacion.DISPONIBLE);

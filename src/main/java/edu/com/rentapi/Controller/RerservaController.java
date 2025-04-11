@@ -5,6 +5,7 @@ import edu.com.rentapi.Dto.PlanoReservaResponseDTO;
 import edu.com.rentapi.Dto.ReservaRequestDTO;
 import edu.com.rentapi.Dto.ReservaResponseDTO;
 import edu.com.rentapi.Service.ReservaService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class RerservaController {
 
 
     @PostMapping("/crear/plano")
-    public ResponseEntity<PlanoReservaResponseDTO> crearReservaPlano(@RequestBody ReservaRequestDTO reservaRequestDTO) {
+    public ResponseEntity<PlanoReservaResponseDTO> crearReservaPlano(@Valid @RequestBody ReservaRequestDTO reservaRequestDTO) {
         return ResponseEntity.ok(reservaService.crearReservaPlana(reservaRequestDTO));
     }
 
