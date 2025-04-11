@@ -25,5 +25,6 @@ public class Reserva {
     @ManyToOne
     private Habitacion habitacion;
 
-    private EstadoReserva estado = EstadoReserva.CONFIRMADA;
+    @Enumerated(EnumType.STRING)
+    private EstadoHabitacion estado = EstadoHabitacion.RESERVADA;
 }

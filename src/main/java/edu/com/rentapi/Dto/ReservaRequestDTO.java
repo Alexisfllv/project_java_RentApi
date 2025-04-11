@@ -6,4 +6,5 @@ public record ReservaRequestDTO(
         Long habitacionId,
         LocalDate fechaInicio,
         LocalDate fechaFin
+
 ) {}

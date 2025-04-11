@@ -2,10 +2,10 @@ package edu.com.rentapi.Dto;
 
 import java.time.LocalDate;
 
-public record ReservaReponseDTO(
+public record ReservaResponseDTO(
         Long id,
-        HabitacionDTO habitacion,
         LocalDate fechaInicio,
         LocalDate fechaFin,
-        String estado
+        String estado,
+        HabitacionDTO habitacion
 ) {}
