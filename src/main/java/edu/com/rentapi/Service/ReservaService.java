@@ -3,25 +3,25 @@ package edu.com.rentapi.Service;
 import edu.com.rentapi.Dto.PlanoReservaResponseDTO;
 import edu.com.rentapi.Dto.ReservaRequestDTO;
 import edu.com.rentapi.Dto.ReservaResponseDTO;
+import edu.com.rentapi.Pagination.PageResponseDTO;
+import edu.com.rentapi.Response.ResponseDTO;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface ReservaService {
 
 
-    // datos con relacion
-    ReservaResponseDTO crearReserva(ReservaRequestDTO reservaRequestDTO);
-
 
     // datos en formato plano
-    PlanoReservaResponseDTO crearReservaPlana(ReservaRequestDTO reservaRequestDTO);
+    ResponseDTO crearReservaPlana(ReservaRequestDTO reservaRequestDTO);
 
     // listado de reservas
-    List<PlanoReservaResponseDTO> listadoReservas();
+    PageResponseDTO<PlanoReservaResponseDTO> listadoReservas(Pageable pageable);
 
     // busqueda de reservas
     PlanoReservaResponseDTO buscarReserva(Long id);
 
     // culminar reserva
-    PlanoReservaResponseDTO culminarReserva(Long id);
+    ResponseDTO culminarReserva(Long id);
 }
