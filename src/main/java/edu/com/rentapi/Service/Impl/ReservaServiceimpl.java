@@ -1,6 +1,7 @@
 package edu.com.rentapi.Service.Impl;
 
 
+import edu.com.rentapi.Dto.PlanoReservaResponseDTO;
 import edu.com.rentapi.Dto.ReservaRequestDTO;
 import edu.com.rentapi.Dto.ReservaResponseDTO;
 import edu.com.rentapi.Entity.EstadoHabitacion;
@@ -36,8 +37,11 @@ public class ReservaServiceimpl implements ReservaService {
         Reserva reserva =  reservaMapper.toReserva(reservaRequestDTO);
 
         reserva.setEstado(EstadoHabitacion.RESERVADA);
+        reserva.setClienteNombre(reservaRequestDTO.clienteNombre());
+        reserva.setClienteDni(reservaRequestDTO.clienteDni());
         reserva.setFechaInicio(reservaRequestDTO.fechaInicio());
         reserva.setFechaFin(reservaRequestDTO.fechaFin());
+        reserva.setComentarios(reservaRequestDTO.comentarios());
 
         // habitacion
         Habitacion habitacion = habitacionRepository.findById(reservaRequestDTO.habitacionId())
@@ -61,6 +65,39 @@ public class ReservaServiceimpl implements ReservaService {
         return reservaMapper.toReservaResponseDTO(reserva);
     }
 
+    @Override
+    public PlanoReservaResponseDTO crearReservaPlana(ReservaRequestDTO reservaRequestDTO) {
+        Reserva reserva =  reservaMapper.toReserva(reservaRequestDTO);
+
+        reserva.setEstado(EstadoHabitacion.RESERVADA);
+        reserva.setClienteNombre(reservaRequestDTO.clienteNombre());
+        reserva.setClienteDni(reservaRequestDTO.clienteDni());
+        reserva.setFechaInicio(reservaRequestDTO.fechaInicio());
+        reserva.setFechaFin(reservaRequestDTO.fechaFin());
+        reserva.setComentarios(reservaRequestDTO.comentarios());
+
+        // habitacion
+        Habitacion habitacion = habitacionRepository.findById(reservaRequestDTO.habitacionId())
+                .orElseThrow(() -> new RuntimeException("Habitacion no encontrada :"+reservaRequestDTO.habitacionId()));
+
+        if (!habitacion.getEstado().equals(EstadoHabitacion.DISPONIBLE)) {
+            log.warn("Habitacion estado :"+habitacion.getEstado());
+            throw new RuntimeException(" la habitacion no esta disponible par reservar :"+ habitacion.getEstado());
+
+        }
+
+
+        habitacion.setEstado(EstadoHabitacion.RESERVADA);
+        habitacionRepository.save(habitacion);
+
+        reserva.setHabitacion(habitacion);
+
+        reservaRepository.save(reserva);
+
+        // response
+        return reservaMapper.toPlanoReservaResponseDto(reserva);
+
+    }
 
 
 }

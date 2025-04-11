@@ -1,6 +1,7 @@
 package edu.com.rentapi.Controller;
 
 
+import edu.com.rentapi.Dto.PlanoReservaResponseDTO;
 import edu.com.rentapi.Dto.ReservaRequestDTO;
 import edu.com.rentapi.Dto.ReservaResponseDTO;
 import edu.com.rentapi.Service.ReservaService;
@@ -22,5 +23,11 @@ public class RerservaController {
     @PostMapping("/crear")
     public ResponseEntity<ReservaResponseDTO> crearReserva(@RequestBody ReservaRequestDTO reservaRequestDTO) {
         return ResponseEntity.ok(reservaService.crearReserva(reservaRequestDTO));
+    }
+
+
+    @PostMapping("/crear/plano")
+    public ResponseEntity<PlanoReservaResponseDTO> crearReservaPlano(@RequestBody ReservaRequestDTO reservaRequestDTO) {
+        return ResponseEntity.ok(reservaService.crearReservaPlana(reservaRequestDTO));
     }
 }

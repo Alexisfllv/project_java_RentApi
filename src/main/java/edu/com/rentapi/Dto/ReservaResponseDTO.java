@@ -7,5 +7,5 @@ public record ReservaResponseDTO(
         LocalDate fechaInicio,
         LocalDate fechaFin,
         String estado,
-        HabitacionDTO habitacion
+        HabitacionResponseDTO habitacion
 ) {}

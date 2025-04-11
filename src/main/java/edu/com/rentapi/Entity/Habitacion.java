@@ -11,19 +11,23 @@ import lombok.extern.java.Log;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "habitaciones")
 public class Habitacion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int piso;
-
+    @Column(nullable = false)
     private int numero;
 
-    private String tipo;
+    @Column(nullable = false)
+    private int piso;
 
-    // El estado inicial será DISPONIBLE cuando se registre la habitación
+    @Column(nullable = false)
+    private String tipo; // Ej: "Suite", "Simple", "Medium"
+
     @Enumerated(EnumType.STRING)
-    private EstadoHabitacion estado = EstadoHabitacion.DISPONIBLE;
+    @Column(nullable = false)
+    private EstadoHabitacion estado; // Ej: DISPONIBLE, RESERVADA, MANTENIMIENTO
 }
