@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -97,6 +98,23 @@ public class ReservaServiceimpl implements ReservaService {
         // response
         return reservaMapper.toPlanoReservaResponseDto(reserva);
 
+    }
+
+    @Override
+    public List<PlanoReservaResponseDTO> listadoReservas() {
+        List<Reserva> reservas = reservaRepository.findAll();
+
+        return  reservas
+                .stream()
+                .map(reserva -> reservaMapper.toPlanoReservaResponseDto(reserva))
+                .toList();
+    }
+
+    @Override
+    public PlanoReservaResponseDTO buscarReserva(Long id) {
+        Reserva reserva  =reservaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Reserva no encontrada :"+id));
+        return reservaMapper.toPlanoReservaResponseDto(reserva);
     }
 
 

@@ -7,10 +7,9 @@ import edu.com.rentapi.Dto.ReservaResponseDTO;
 import edu.com.rentapi.Service.ReservaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/reservas")
@@ -29,5 +28,18 @@ public class RerservaController {
     @PostMapping("/crear/plano")
     public ResponseEntity<PlanoReservaResponseDTO> crearReservaPlano(@RequestBody ReservaRequestDTO reservaRequestDTO) {
         return ResponseEntity.ok(reservaService.crearReservaPlana(reservaRequestDTO));
+    }
+
+    // listado
+    @GetMapping("/listado")
+    public ResponseEntity<List<PlanoReservaResponseDTO>> listarReservas() {
+        return ResponseEntity.status(200).body(reservaService.listadoReservas());
+    }
+
+    // busqueda
+
+    @GetMapping("buscar/{id}")
+    public ResponseEntity<PlanoReservaResponseDTO> buscarReserva(@PathVariable Long id) {
+        return ResponseEntity.ok(reservaService.buscarReserva(id));
     }
 }

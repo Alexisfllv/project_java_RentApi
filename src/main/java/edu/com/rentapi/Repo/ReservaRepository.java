@@ -10,12 +10,5 @@ import java.util.List;
 public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
 
-//    @Query("""
-//        SELECT r FROM Reserva r
-//        WHERE r.estado = 'CONFIRMADA'
-//        AND r.habitacion.id = :habitacionId
-//        AND (r.fechaInicio <= :fechaFin AND r.fechaFin >= :fechaInicio)
-//        """)
-//    List<Reserva> findReservasEnRango(Long habitacionId, LocalDate
-//            fechaInicio, LocalDate fechaFin);
+    
 }
