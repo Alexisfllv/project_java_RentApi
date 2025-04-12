@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -55,4 +56,17 @@ public class RerservaController {
     public ResponseEntity<ResponseDTO> culminarReserva(@PathVariable Long id) {
         return ResponseEntity.ok(reservaService.culminarReserva(id));
     }
+
+    @GetMapping("buscar/fecha")
+    public ResponseEntity<PageResponseDTO<PlanoReservaResponseDTO>> filtrarReservaFechasCreacion
+            (
+                    @RequestParam (defaultValue = "0") Integer page,
+                    @RequestParam (defaultValue = "3") Integer size,
+                    @RequestParam LocalDateTime desde,
+                    @RequestParam LocalDateTime hasta
+            ){
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(reservaService.filtradoFechaInicio(pageable,desde,hasta));
+    }
+
 }

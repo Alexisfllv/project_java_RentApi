@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -118,6 +119,17 @@ public class ReservaServiceimpl implements ReservaService {
         PlanoReservaResponseDTO dto = reservaMapper.toPlanoReservaResponseDto(reservaExistente);
 
         return new ResponseDTO(ResponseMessage.SUCCESSFUL_MODIFICATION.getMessage(), dto);
+    }
+
+    @Override
+    public PageResponseDTO<PlanoReservaResponseDTO> filtradoFechaInicio(Pageable pageable, LocalDateTime desde, LocalDateTime hasta) {
+
+        Page<Reserva> reservaFiltro = reservaRepository.findByFechaCreacionBetween(pageable,desde,hasta);
+
+        Page<PlanoReservaResponseDTO> paged = reservaFiltro
+                .map(reserva -> reservaMapper.toPlanoReservaResponseDto(reserva));
+
+        return new PageResponseDTO<>(paged);
     }
 
 

@@ -7,6 +7,8 @@ import edu.com.rentapi.Pagination.PageResponseDTO;
 import edu.com.rentapi.Response.ResponseDTO;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReservaService {
@@ -24,4 +26,7 @@ public interface ReservaService {
 
     // culminar reserva
     ResponseDTO culminarReserva(Long id);
+
+    // filtrado de fechas
+    PageResponseDTO<PlanoReservaResponseDTO> filtradoFechaInicio(Pageable pageable, LocalDateTime desde, LocalDateTime hasta);
 }
