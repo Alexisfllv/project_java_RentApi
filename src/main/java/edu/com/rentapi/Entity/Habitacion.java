@@ -29,5 +29,5 @@ public class Habitacion {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EstadoHabitacion estado; // Ej: DISPONIBLE, RESERVADA, MANTENIMIENTO
+    private EstadoHabitacion estado = EstadoHabitacion.DISPONIBLE; // Ej: DISPONIBLE, RESERVADA, MANTENIMIENTO
 }
