@@ -50,6 +50,5 @@ public class Reserva {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
-    private EstadoReserva estado = EstadoReserva.REALIZADA; // Reutilizas el enum para saber si está RESERVADA, etc.
-
+    private EstadoReserva estado = EstadoReserva.REALIZADA;
 }

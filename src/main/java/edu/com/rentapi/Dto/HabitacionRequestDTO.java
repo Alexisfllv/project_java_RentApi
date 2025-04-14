@@ -21,5 +21,4 @@ public record HabitacionRequestDTO(
         @Size(max = 50, message = "El tipo de habitación no debe exceder los 50 caracteres")
         @Schema(description = "Tipo de habitación (ej: simple, doble, suite)", example = "doble", maxLength = 50, required = true)
         String tipo
-
 ) {}

@@ -29,5 +29,4 @@ public record HabitacionUpdateDTO(
         @Enumerated(EnumType.STRING)
         @Schema(description = "Estados comunes" , example = "DISPONIBLE,RESERVADA,MANTENIMIENTO")
         EstadoHabitacion estado
-) {
-}
+) { }

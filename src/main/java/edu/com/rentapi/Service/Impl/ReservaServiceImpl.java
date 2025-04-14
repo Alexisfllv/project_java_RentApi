@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ReservaServiceimpl implements ReservaService {
+public class ReservaServiceImpl implements ReservaService {
 
 
     private final ReservaRepository reservaRepository;

@@ -34,5 +34,4 @@ public record ReservaRequestDTO(
         @Size(max = 255, message = "Los comentarios no deben superar los 255 caracteres")
         @Schema(description = "Comentarios sobre la reserva adicionales")
         String comentarios
-
 ) {}

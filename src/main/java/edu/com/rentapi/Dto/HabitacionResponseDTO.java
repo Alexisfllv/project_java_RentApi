@@ -19,5 +19,4 @@ public record HabitacionResponseDTO(
 
         @Schema(description = "Estado actual de la habitación", example = "DISPONIBLE/RESERVADA/MANTENIMIENTO")
         EstadoHabitacion estado
-
 ) {}
