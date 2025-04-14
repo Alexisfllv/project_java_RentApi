@@ -8,4 +8,4 @@ public record HabitacionResponseDTO(
         int numero,
         String tipo,
         EstadoHabitacion estado
-        ) {}
+) {}

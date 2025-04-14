@@ -3,20 +3,17 @@ package edu.com.rentapi.Controller;
 
 import edu.com.rentapi.Dto.PlanoReservaResponseDTO;
 import edu.com.rentapi.Dto.ReservaRequestDTO;
-import edu.com.rentapi.Dto.ReservaResponseDTO;
 import edu.com.rentapi.Pagination.PageResponseDTO;
 import edu.com.rentapi.Response.ResponseDTO;
 import edu.com.rentapi.Service.ReservaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/reservas")

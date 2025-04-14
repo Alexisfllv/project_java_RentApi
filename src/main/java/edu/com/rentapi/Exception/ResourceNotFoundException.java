@@ -5,7 +5,6 @@ package edu.com.rentapi.Exception;
  * Ejemplo: entidad no existe por ID u otra clave.
  */
 public class ResourceNotFoundException extends RuntimeException {
-
     public ResourceNotFoundException(String message) {
         super(message);
     }

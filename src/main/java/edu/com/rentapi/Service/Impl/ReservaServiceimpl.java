@@ -3,13 +3,11 @@ package edu.com.rentapi.Service.Impl;
 
 import edu.com.rentapi.Dto.PlanoReservaResponseDTO;
 import edu.com.rentapi.Dto.ReservaRequestDTO;
-import edu.com.rentapi.Dto.ReservaResponseDTO;
 import edu.com.rentapi.Entity.EstadoHabitacion;
 import edu.com.rentapi.Entity.EstadoReserva;
 import edu.com.rentapi.Entity.Habitacion;
 import edu.com.rentapi.Entity.Reserva;
 import edu.com.rentapi.Exception.ResourceNotFoundException;
-import edu.com.rentapi.Mapper.HabitacionMapper;
 import edu.com.rentapi.Mapper.ReservaMapper;
 import edu.com.rentapi.Pagination.PageResponseDTO;
 import edu.com.rentapi.Repo.HabitacionRepository;
@@ -24,22 +22,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReservaServiceimpl implements ReservaService {
 
-    //
+
     private final ReservaRepository reservaRepository;
     private final ReservaMapper reservaMapper;
-    //
-    private final HabitacionRepository habitacionRepository;
-    private final HabitacionMapper habitacionMapper;
 
+    private final HabitacionRepository habitacionRepository;
 
 
     @Override
@@ -52,9 +46,8 @@ public class ReservaServiceimpl implements ReservaService {
         reserva.setFechaInicio(reservaRequestDTO.fechaInicio());
         reserva.setFechaFin(reservaRequestDTO.fechaFin());
         reserva.setComentarios(reservaRequestDTO.comentarios());
-        //
-        reserva.setFechaCreacion(LocalDateTime.now());
 
+        reserva.setFechaCreacion(LocalDateTime.now());
 
         // habitacion
         Habitacion habitacion = habitacionRepository.findById(reservaRequestDTO.habitacionId())
@@ -65,7 +58,6 @@ public class ReservaServiceimpl implements ReservaService {
             throw new ResourceNotFoundException(" la habitacion no esta disponible para reservar :"+ habitacion.getEstado());
 
         }
-
 
         log.info("estado :"+ reserva.getEstado());
         habitacion.setEstado(EstadoHabitacion.RESERVADA);
@@ -131,6 +123,4 @@ public class ReservaServiceimpl implements ReservaService {
 
         return new PageResponseDTO<>(paged);
     }
-
-
 }

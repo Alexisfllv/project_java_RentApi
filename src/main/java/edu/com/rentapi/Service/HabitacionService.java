@@ -15,7 +15,6 @@ public interface HabitacionService {
     // listado de habitaciones disponibles
     List<HabitacionResponseDTO> listarHabitacionesConEstadoDisponible();
 
-
     // listar todas las habitaciones
     PageResponseDTO<HabitacionResponseDTO> listarHabitaciones(Pageable pageable);
 
@@ -30,5 +29,4 @@ public interface HabitacionService {
 
     // delete
     ResponseDTO eliminarHabitacion(Long id);
-
 }

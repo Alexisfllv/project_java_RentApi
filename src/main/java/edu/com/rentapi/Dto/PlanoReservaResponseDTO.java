@@ -17,6 +17,4 @@ public record PlanoReservaResponseDTO(
         EstadoReserva estadoReserva,
         LocalDateTime fechaCreacion,
         LocalDateTime fechaCulminada
-) {
-
-}
+) { }

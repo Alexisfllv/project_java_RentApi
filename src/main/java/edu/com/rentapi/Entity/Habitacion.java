@@ -13,7 +13,6 @@ import lombok.extern.java.Log;
 @AllArgsConstructor
 @Table(name = "habitaciones")
 public class Habitacion {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
