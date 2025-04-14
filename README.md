@@ -1,4 +1,5 @@
 # 🧱 Estructura proyecto
+📥 [Descargar RentApi.postman_collection.json](RentApi.postman_collection.json)
 
 ``` python
 com.ejemplo.hotel
