@@ -18,10 +18,10 @@ public class Habitacion {
     private Long id;
 
     @Column(nullable = false)
-    private int numero;
+    private Integer numero;
 
     @Column(nullable = false)
-    private int piso;
+    private Integer piso;
 
     @Column(nullable = false)
     private String tipo; // Ej: "Suite", "Simple", "Medium"

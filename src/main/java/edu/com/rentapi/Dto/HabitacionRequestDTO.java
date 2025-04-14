@@ -6,10 +6,10 @@ import jakarta.validation.constraints.Size;
 public record HabitacionRequestDTO(
 
         @Min(value = 1, message = "El piso debe ser mayor o igual a 1")
-        int piso,
+        Integer piso,
 
         @Min(value = 1, message = "El número de habitación debe ser mayor o igual a 1")
-        int numero,
+        Integer numero,
 
         @NotBlank(message = "El tipo de habitación es obligatorio")
         @Size(max = 50, message = "El tipo de habitación no debe exceder los 50 caracteres")

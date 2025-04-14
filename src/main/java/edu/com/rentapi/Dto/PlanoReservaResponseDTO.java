@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public record PlanoReservaResponseDTO(
         Long reservaId,
-        int habitacionNumero,
+        Integer habitacionNumero,
         String habitacionTipo,
         String clienteNombre,
         LocalDate fechaInicio,

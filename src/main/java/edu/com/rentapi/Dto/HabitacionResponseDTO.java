@@ -4,8 +4,9 @@ import edu.com.rentapi.Entity.EstadoHabitacion;
 
 public record HabitacionResponseDTO(
         Long id,
-        int piso,
-        int numero,
+        Integer piso,
+        Integer numero,
         String tipo,
         EstadoHabitacion estado
-) {}
+) {
+}
