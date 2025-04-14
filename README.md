@@ -1,5 +1,28 @@
+# 🚗 RentApi - Backend Java con Spring Boot
+
+![Java](https://img.shields.io/badge/Java-21-orange?logo=java&logoWidth=14)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.4-brightgreen?logo=spring&logoWidth=14)
+![MySQL](https://img.shields.io/badge/Database-MySQL-blue?logo=mysql&logoWidth=14)
+![MapStruct](https://img.shields.io/badge/MapStruct-1.6.3-yellow?logo=mapstruct&logoWidth=14)
+![Lombok](https://img.shields.io/badge/Lombok-enabled-red?logo=lombok&logoWidth=14)
+![Swagger](https://img.shields.io/badge/API%20Docs-Swagger-informational?logo=swagger&logoWidth=14)
+
+## 📚 Descripción
+
+Este es un proyecto backend desarrollado con **Spring Boot 3.4.4** para gestionar el sistema de alquiler de habitaciones. Usa una arquitectura sencilla y moderna, con integración de base de datos MySQL, documentación de API con Swagger y mapeo de DTOs usando MapStruct.
+
+---
+## 🚀 Tecnologías utilizadas
+
+- ☕ **Java 21**
+- 🌱 **Spring Boot Web & Data JPA**
+- 🛢️ **MySQL**
+- 🔁 **MapStruct** – para mapeo entre entidades y DTOs
+- 🔒 **Validaciones con Jakarta Validation**
+- 🧪 **Spring Boot Test**
+- 📚 **Swagger (Springdoc OpenAPI)** – documentación automática
+---
 # 🧱 Estructura proyecto
-📥 [Descargar RentApi.postman_collection.json](RentApi.postman_collection.json)
 
 ``` python
 com.ejemplo.hotel
@@ -967,30 +990,7 @@ springdoc.api-docs.path=/v3/api-docs
 springdoc.swagger-ui.path=/swagger-ui.html
 ```
 ---
-# 🚗 RentApi - Backend Java con Spring Boot
 
-![Java](https://img.shields.io/badge/Java-21-orange?logo=java&logoWidth=14)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.4-brightgreen?logo=spring&logoWidth=14)
-![MySQL](https://img.shields.io/badge/Database-MySQL-blue?logo=mysql&logoWidth=14)
-![MapStruct](https://img.shields.io/badge/MapStruct-1.6.3-yellow?logo=mapstruct&logoWidth=14)
-![Lombok](https://img.shields.io/badge/Lombok-enabled-red?logo=lombok&logoWidth=14)
-![Swagger](https://img.shields.io/badge/API%20Docs-Swagger-informational?logo=swagger&logoWidth=14)
-
-## 📚 Descripción
-
-Este es un proyecto backend desarrollado con **Spring Boot 3.4.4** para gestionar el sistema de alquiler de habitaciones. Usa una arquitectura sencilla y moderna, con integración de base de datos MySQL, documentación de API con Swagger y mapeo de DTOs usando MapStruct.
-
----
-## 🚀 Tecnologías utilizadas
-
-- ☕ **Java 21**
-- 🌱 **Spring Boot Web & Data JPA**
-- 🛢️ **MySQL**
-- 🔁 **MapStruct** – para mapeo entre entidades y DTOs
-- 🔒 **Validaciones con Jakarta Validation**
-- 🧪 **Spring Boot Test**
-- 📚 **Swagger (Springdoc OpenAPI)** – documentación automática
----
 ## ⚙️ ¿Cómo levantar el proyecto?
 
 ### 1. Clonar el repositorio
@@ -1038,6 +1038,8 @@ Accede a la documentación automática de la API en:
 ---
 ## Postman Collection
 
+📥 [Descargar RentApi.postman_collection.json](RentApi.postman_collection.json)
+
 ## 🧰 Buenas prácticas
 
 - Usa **DTOs** para exponer solo los datos necesarios.
@@ -1048,7 +1050,7 @@ Accede a la documentación automática de la API en:
 ---
 ## 📤 Autor
 
-Desarrollado por: [AlexisFl]
+Desarrollado por: [AlexisFl](https://github.com/Alexisfllv)
 
 📧 Contacto: alexisxscfl@gmail.com
 
