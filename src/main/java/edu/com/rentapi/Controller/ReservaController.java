@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @RestController
 @RequestMapping("/api/reservas")
 @RequiredArgsConstructor
-public class RerservaController {
+public class ReservaController {
 
     private final ReservaService reservaService;
 
