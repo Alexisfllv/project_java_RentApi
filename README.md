@@ -1056,10 +1056,7 @@ Desarrollado por: [AlexisFl](https://github.com/Alexisfllv)
 
 
 # Puntos a mejorar
-* Documentar DTO
-* Mejorar respuestas http en los Controladores
 * Agregar pruebas unitarias
-* Agregar mas tipos de validaciones
 * Agregar Spring Secutiry
 * Usar perfiles : dev, prod
 * 
