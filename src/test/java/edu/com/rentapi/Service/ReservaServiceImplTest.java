@@ -6,7 +6,9 @@ import edu.com.rentapi.Entity.EstadoHabitacion;
 import edu.com.rentapi.Entity.EstadoReserva;
 import edu.com.rentapi.Entity.Habitacion;
 import edu.com.rentapi.Entity.Reserva;
+import edu.com.rentapi.Exception.ResourceNotFoundException;
 import edu.com.rentapi.Mapper.ReservaMapper;
+import edu.com.rentapi.Pagination.PageResponseDTO;
 import edu.com.rentapi.Repo.HabitacionRepository;
 import edu.com.rentapi.Repo.ReservaRepository;
 import edu.com.rentapi.Response.ResponseDTO;
@@ -16,14 +18,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 @ExtendWith(MockitoExtension.class)
 public class ReservaServiceImplTest {
@@ -47,10 +59,16 @@ public class ReservaServiceImplTest {
         Long idHabitacion = 1L;
         Long idReserva = 1L;
 
-        Habitacion habitacion1 = new Habitacion(idHabitacion, 101, 1, "Simple", EstadoHabitacion.DISPONIBLE);
+        Habitacion habitacion1 = new Habitacion();
+        habitacion1.setId(idHabitacion);
+        habitacion1.setNumero(101);
+        habitacion1.setPiso(1);
+        habitacion1.setTipo("Simple");
+        habitacion1.setEstado(EstadoHabitacion.DISPONIBLE);
 
         Reserva reserva1 = new Reserva();
         reserva1.setId(idReserva);
+        reserva1.setHabitacion(habitacion1);
         reserva1.setClienteNombre("Juan Pérez");
         reserva1.setClienteDni("12345678");
         reserva1.setFechaInicio(LocalDate.of(2025, 5, 1));
@@ -101,6 +119,167 @@ public class ReservaServiceImplTest {
         verify(habitacionRepository).save(habitacion1);
         verify(reservaRepository).save(reserva1);
         verify(reservaMapper).toPlanoReservaResponseDto(reserva1);
+    }
+
+
+    @Test
+    void shouldThrowExceptionWhenHabitacionNotFound() {
+        // Given
+        Long habitacionIdInexistente = 999L;
+
+        ReservaRequestDTO reservaRequestDTO = new ReservaRequestDTO(
+                habitacionIdInexistente,
+                "Carlos De",
+                "12345678",
+                LocalDate.of(2025, 5, 1),
+                LocalDate.of(2025, 5, 5),
+                "Reservar para evento"
+        );
+
+        // El mapper genera una reserva vacía (necesario para evitar null)
+        Reserva reserva = new Reserva();
+        when(reservaMapper.toReserva(reservaRequestDTO)).thenReturn(reserva);
+
+        // Simulamos que la habitación no existe
+        when(habitacionRepository.findById(habitacionIdInexistente))
+                .thenReturn(Optional.empty());
+
+        // When / Then
+        assertThatThrownBy(() -> reservaServiceImpl.crearReservaPlana(reservaRequestDTO))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Habitacion no encontrada :" + habitacionIdInexistente);
+
+        // Verifica que se llamó a los mocks necesarios
+        verify(habitacionRepository).findById(habitacionIdInexistente);
+        verify(reservaMapper).toReserva(reservaRequestDTO); // sí se usa
+        verifyNoInteractions(reservaRepository); // este sí se mantiene
+    }
+
+    @Test
+    void shouldThrowExceptionWhenHabitacionNotAvailable() {
+        // Given
+        Long habitacionId = 2L;
+
+        ReservaRequestDTO reservaRequestDTO = new ReservaRequestDTO(
+                habitacionId,
+                "Lucía Vargas",
+                "87654321",
+                LocalDate.now().plusDays(1),
+                LocalDate.now().plusDays(3),
+                "Cliente frecuente"
+        );
+
+        Reserva reserva = new Reserva();
+        when(reservaMapper.toReserva(reservaRequestDTO)).thenReturn(reserva);
+
+        // Creamos una habitación que NO está disponible
+        Habitacion habitacionNoDisponible = new Habitacion(
+                habitacionId,
+                105,
+                1,
+                "Suite",
+                EstadoHabitacion.MANTENIMIENTO
+        );
+
+        when(habitacionRepository.findById(habitacionId))
+                .thenReturn(Optional.of(habitacionNoDisponible));
+
+        // When / Then
+        assertThatThrownBy(() -> reservaServiceImpl.crearReservaPlana(reservaRequestDTO))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage(" la habitacion no esta disponible para reservar :"
+                        + habitacionNoDisponible.getEstado());
+
+        verify(habitacionRepository).findById(habitacionId);
+        verify(reservaMapper).toReserva(reservaRequestDTO);
+        verifyNoInteractions(reservaRepository); // no se debería guardar ninguna reserva
+    }
+
+
+    // page reserva response dto
+
+    @Test
+    void shouldListAllReservasPaginated() {
+        // Arrange
+        Pageable pageable = PageRequest.of(0, 3);
+
+        Habitacion habitacion1 = new Habitacion(1L, 101, 1, "Matrimonial", EstadoHabitacion.RESERVADA);
+        Habitacion habitacion2 = new Habitacion(2L, 201, 2, "Basica", EstadoHabitacion.RESERVADA);
+
+
+
+        Reserva reserva1 = new Reserva();
+        reserva1.setId(1L);
+        reserva1.setHabitacion(habitacion1);
+        reserva1.setClienteNombre("Ana");
+        reserva1.setClienteDni("11112222");
+        reserva1.setFechaInicio(LocalDate.of(2025, 5, 1));
+        reserva1.setFechaFin(LocalDate.of(2025, 5, 5));
+        reserva1.setComentarios("Comentario 1");
+        reserva1.setEstado(EstadoReserva.REALIZADA);
+
+        Reserva reserva2 = new Reserva();
+        reserva1.setId(2L);
+        reserva1.setHabitacion(habitacion2);
+        reserva1.setClienteNombre("Luis");
+        reserva1.setClienteDni("33334444");
+        reserva1.setFechaInicio(LocalDate.of(2025, 5, 2));
+        reserva1.setFechaFin(LocalDate.of(2025, 5, 6));
+        reserva1.setComentarios("Comentario 2");
+        reserva1.setEstado(EstadoReserva.REALIZADA);
+
+        List<Reserva> reservas = List.of(reserva1, reserva2);
+
+        Page<Reserva> pageReservas = new PageImpl<>(reservas,pageable,reservas.size());
+
+        PlanoReservaResponseDTO planoReservaResponseDTO1 = new PlanoReservaResponseDTO(
+                1L,
+                101,
+                "Matrimonial",
+                "Ana",
+                LocalDate.of(2025, 5, 1),
+                LocalDate.of(2025, 5, 5),
+                "Comentario 1",
+                EstadoReserva.REALIZADA,
+                LocalDateTime.of(2025, 4, 1, 10, 30),
+                null
+        );
+
+        PlanoReservaResponseDTO planoReservaResponseDTO2 = new PlanoReservaResponseDTO(
+                2L,
+                201,
+                "Basica",
+                "Luis",
+                LocalDate.of(2025, 5, 2),
+                LocalDate.of(2025, 5, 6),
+                "Comentario 2",
+                EstadoReserva.REALIZADA,
+                LocalDateTime.of(2025, 4, 1, 10, 30),
+                null
+        );
+
+        when(reservaRepository.findAll(pageable)).thenReturn(pageReservas);
+        when(reservaMapper.toPlanoReservaResponseDto(reserva1)).thenReturn(planoReservaResponseDTO1);
+        when(reservaMapper.toPlanoReservaResponseDto(reserva2)).thenReturn(planoReservaResponseDTO2);
+
+        // act
+        PageResponseDTO<PlanoReservaResponseDTO> resultado = reservaServiceImpl.listadoReservas(pageable);
+
+        // Assert
+
+        assertThat(resultado).isNotNull();
+        assertThat(resultado.content()).hasSize(2);
+        assertThat(resultado.content()).containsExactly(planoReservaResponseDTO1, planoReservaResponseDTO2);
+        assertThat(resultado.totalElements()).isEqualTo(2);
+        assertThat(resultado.page()).isEqualTo(0);
+        assertThat(resultado.size()).isEqualTo(3);
+
+        //verificar
+
+        verify(reservaRepository).findAll(pageable);
+        verify(reservaMapper).toPlanoReservaResponseDto(reserva1);
+        verify(reservaMapper).toPlanoReservaResponseDto(reserva2);
+
     }
 
 
