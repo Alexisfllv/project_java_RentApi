@@ -100,11 +100,6 @@ public class ReservaServiceImpl implements ReservaService {
         reservaExistente.setEstado(EstadoReserva.CULMINADA);
 
         // habitacion
-        if (reservaExistente.getHabitacion().getEstado().equals(EstadoHabitacion.DISPONIBLE)) {
-            log.warn("Habitacion estado :"+reservaExistente.getHabitacion().getEstado());
-            throw new ResourceNotFoundException(" la habitacion ya se encuentra disponible:"+ reservaExistente.getHabitacion().getEstado());
-
-        }
         reservaExistente.getHabitacion().setEstado(EstadoHabitacion.DISPONIBLE);
 
         reservaRepository.save(reservaExistente);
