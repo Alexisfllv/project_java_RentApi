@@ -207,8 +207,6 @@ public class ReservaServiceImplTest {
         Habitacion habitacion1 = new Habitacion(1L, 101, 1, "Matrimonial", EstadoHabitacion.RESERVADA);
         Habitacion habitacion2 = new Habitacion(2L, 201, 2, "Basica", EstadoHabitacion.RESERVADA);
 
-
-
         Reserva reserva1 = new Reserva();
         reserva1.setId(1L);
         reserva1.setHabitacion(habitacion1);
@@ -412,8 +410,76 @@ public class ReservaServiceImplTest {
 
     }
 
+    @Test
+    void shouldCulminarReservaWhenIdExistsNotFound(){
+        // Given
+        Long idReserva = 999L;
+
+        when(reservaRepository.findById(idReserva)).thenReturn(Optional.empty());
+
+        // When
+        assertThatThrownBy(() -> reservaServiceImpl.culminarReserva(idReserva))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Reserva no encontrada :"+idReserva);
+
+        // THen
+        verify(reservaRepository).findById(idReserva);
+    }
 
 
+    @Test
+    void shouldCulminarReservaWhenIdDoesNotExist(){
+        // Arrange
+        Pageable pageable = PageRequest.of(0, 3);
+        LocalDateTime desde = LocalDateTime.of(2025, 4, 1, 0, 0);
+        LocalDateTime hasta = LocalDateTime.of(2025, 4, 30, 23, 59);
+
+        Habitacion habitacion1 = new Habitacion(1L, 101, 1, "Matrimonial", EstadoHabitacion.RESERVADA);
+
+        Reserva reserva1 = new Reserva();
+        reserva1.setId(1L);
+        reserva1.setHabitacion(habitacion1);
+        reserva1.setClienteNombre("Ana");
+        reserva1.setClienteDni("11112222");
+        reserva1.setFechaInicio(LocalDate.of(2025, 5, 1));
+        reserva1.setFechaFin(LocalDate.of(2025, 5, 5));
+        reserva1.setComentarios("Comentario 1");
+        reserva1.setEstado(EstadoReserva.REALIZADA);
+        reserva1.setFechaCreacion(LocalDateTime.of(2025, 4, 10, 12, 0));
+
+        PlanoReservaResponseDTO dto = new PlanoReservaResponseDTO(
+                1L,
+                101,
+                "Simple",
+                "Carlos",
+                LocalDate.of(2025, 5, 1),
+                LocalDate.of(2025, 5, 3),
+                "Comentario",
+                EstadoReserva.REALIZADA,
+                reserva1.getFechaCreacion(),
+                null
+        );
+
+        Page<Reserva> reservas = new PageImpl<>(List.of(reserva1),pageable,1);
+
+        when(reservaRepository.findByFechaCreacionBetween(pageable,desde,hasta)).thenReturn(reservas);
+        when(reservaMapper.toPlanoReservaResponseDto(reserva1)).thenReturn(dto);
+
+        // Act
+        PageResponseDTO<PlanoReservaResponseDTO> resultado = reservaServiceImpl.filtradoFechaInicio(pageable,desde,hasta);
+
+        // Assert
+        assertThat(resultado).isNotNull();
+        assertThat(resultado.content()).hasSize(1);
+        assertThat(resultado.content().get(0)).isEqualTo(dto);
+        assertThat(resultado.totalElements()).isEqualTo(1);
+        assertThat(resultado.page()).isEqualTo(0);
+        assertThat(resultado.size()).isEqualTo(3);
+
+        // verificar
+        verify(reservaRepository).findByFechaCreacionBetween(pageable,desde,hasta);
+        verify(reservaMapper).toPlanoReservaResponseDto(reserva1);
+    }
 }
 
 
