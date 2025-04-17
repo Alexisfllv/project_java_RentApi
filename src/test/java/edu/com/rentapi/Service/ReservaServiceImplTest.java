@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -281,6 +282,136 @@ public class ReservaServiceImplTest {
         verify(reservaMapper).toPlanoReservaResponseDto(reserva2);
 
     }
+
+    @Test
+    void shouldReturnReservaWhenIdExists(){
+
+        // Given
+        Long idReserva = 1L;
+        Habitacion habitacion1 = new Habitacion(1L, 101, 1, "Matrimonial", EstadoHabitacion.RESERVADA);
+
+        Reserva reserva1 = new Reserva();
+        reserva1.setId(1L);
+        reserva1.setHabitacion(habitacion1);
+        reserva1.setClienteNombre("Ana");
+        reserva1.setClienteDni("11112222");
+        reserva1.setFechaInicio(LocalDate.of(2025, 5, 1));
+        reserva1.setFechaFin(LocalDate.of(2025, 5, 5));
+        reserva1.setComentarios("Comentario 1");
+        reserva1.setEstado(EstadoReserva.REALIZADA);
+
+        PlanoReservaResponseDTO planoReservaResponseDTO1 = new PlanoReservaResponseDTO(
+                1L,
+                101,
+                "Matrimonial",
+                "Ana",
+                LocalDate.of(2025, 5, 1),
+                LocalDate.of(2025, 5, 5),
+                "Comentario 1",
+                EstadoReserva.REALIZADA,
+                LocalDateTime.of(2025, 4, 1, 10, 30),
+                null
+        );
+
+        // When
+
+        when(reservaRepository.findById(idReserva)).thenReturn(Optional.of(reserva1));
+        when(reservaMapper.toPlanoReservaResponseDto(reserva1)).thenReturn(planoReservaResponseDTO1);
+
+        // ACT
+        PlanoReservaResponseDTO resultado = reservaServiceImpl.buscarReserva(idReserva);
+
+        // ASSERT
+        assertThat(resultado).isNotNull();
+        assertThat(resultado.reservaId()).isEqualTo(idReserva);
+        assertThat(resultado.habitacionNumero()).isEqualTo(101);
+        assertThat(resultado.habitacionTipo()).isEqualTo("Matrimonial");
+        assertThat(resultado.clienteNombre()).isEqualTo("Ana");
+        assertThat(resultado.fechaInicio()).isEqualTo(LocalDate.of(2025, 5, 1));
+        assertThat(resultado.fechaFin()).isEqualTo(LocalDate.of(2025, 5, 5));
+        assertThat(resultado.comentarios()).isEqualTo("Comentario 1");
+        assertThat(resultado.estadoReserva()).isEqualTo(EstadoReserva.REALIZADA);
+        assertThat(resultado.fechaCreacion()).isEqualTo(LocalDateTime.of(2025, 4, 1, 10, 30));
+        assertThat(resultado.fechaCulminada()).isNull();
+
+        verify(reservaRepository).findById(idReserva);
+        verify(reservaMapper).toPlanoReservaResponseDto(reserva1);
+
+    }
+
+
+    @Test
+    void shouldReturnReservaWhenIdDoesNotExist(){
+
+        // Given
+        Long idReserva = 999L;
+
+        when(reservaRepository.findById(idReserva)).thenReturn(Optional.empty());
+
+        // When
+        assertThatThrownBy(() -> reservaServiceImpl.buscarReserva(idReserva))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Reserva no encontrada :"+idReserva);
+
+        // THen
+        verify(reservaRepository).findById(idReserva);
+
+    }
+
+    //
+    @Test
+    void shouldCulminarReservaWhenIdExists(){
+
+        // Given
+        Long idReserva = 1L;
+        Habitacion habitacion1 = new Habitacion(1L, 101, 1, "Matrimonial", EstadoHabitacion.RESERVADA);
+
+        Reserva reserva1 = new Reserva();
+        reserva1.setId(1L);
+        reserva1.setHabitacion(habitacion1);
+        reserva1.setClienteNombre("Ana");
+        reserva1.setClienteDni("11112222");
+        reserva1.setFechaInicio(LocalDate.of(2025, 5, 1));
+        reserva1.setFechaFin(LocalDate.of(2025, 5, 5));
+        reserva1.setComentarios("Comentario 1");
+        reserva1.setEstado(EstadoReserva.REALIZADA);
+
+        PlanoReservaResponseDTO planoReservaResponseDTO1 = new PlanoReservaResponseDTO(
+                1L,
+                101,
+                "Matrimonial",
+                "Ana",
+                LocalDate.of(2025, 5, 1),
+                LocalDate.of(2025, 5, 5),
+                "Comentario 1",
+                EstadoReserva.CULMINADA,
+                LocalDateTime.of(2025, 4, 1, 10, 30),
+                LocalDateTime.of(2025, 4, 5, 10, 30)
+        );
+
+
+        // When
+        when(reservaRepository.findById(idReserva)).thenReturn(Optional.of(reserva1));
+        when(reservaMapper.toPlanoReservaResponseDto(reserva1)).thenReturn(planoReservaResponseDTO1);
+
+        ResponseDTO responseDTO = reservaServiceImpl.culminarReserva(idReserva);
+
+
+        // Assert
+        assertThat(responseDTO.mensaje()).isEqualTo("Modification completed successfully");
+        assertThat(responseDTO.data()).isEqualTo(planoReservaResponseDTO1);
+        assertThat(((PlanoReservaResponseDTO) responseDTO.data()).reservaId()).isEqualTo(idReserva);
+        assertThat(reserva1.getEstado()).isEqualTo(EstadoReserva.CULMINADA);
+        assertThat(reserva1.getFechaCulminada()).isNotNull();
+        assertThat(reserva1.getHabitacion().getEstado()).isEqualTo(EstadoHabitacion.DISPONIBLE);
+
+        // verify
+        verify(reservaRepository).findById(idReserva);
+        verify(reservaMapper).toPlanoReservaResponseDto(reserva1);
+        verify(reservaRepository).save(reserva1);
+
+    }
+
 
 
 }
