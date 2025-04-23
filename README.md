@@ -35,7 +35,7 @@ com.ejemplo.rentapi
 ├── configuration     # Swagger config
 └── RentApiApplication.java
 ```
-
+![Modelo ER](./db.png)
 ---
 
 ## 🧩 Principales Funcionalidades
@@ -114,6 +114,7 @@ mvn spring-boot:run
 
 ---
 
-## 🧑‍💻 Autor
+## 📤 Autor
 
-Proyecto realizado con fines educativos.
+Desarrollado por: [AlexisFl]
+📧 Contacto: alexisxscfl@gmail.com
