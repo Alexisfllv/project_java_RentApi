@@ -1,29 +1,18 @@
 use RentApi;
 
-select * from Reserva;
+select * from reservas;
 
-select * from Habitacion;
+select * from habitaciones;
 
-describe habitacion;
+INSERT INTO habitaciones (numero, piso, tipo, estado) VALUES
+(101, 1, 'Suite', 'DISPONIBLE'),
+(102, 1, 'Medium', 'DISPONIBLE'),
+(201, 2, 'Standard', 'DISPONIBLE'),
+(202, 2, 'Medium', 'DISPONIBLE'),
+(301, 3, 'Suite', 'DISPONIBLE');
 
-insert into habitacion
-(numero,piso,tipo)
-values
-(101,1,"Basico"),
-(102,1,"Basico"),
-(103,1,"Basico"),
-(201,2,"Medium"),
-(202,2,"Medium"),
-(203,2,"Medium"),
-(301,3,"Vip"),
-(302,3,"Vip"),
-(303,3,"Vip");
 
-select * from habitacion;
 
-describe reserva;
-
-select * from reserva;
 
 -- CONFIRMADA = 0
 INSERT INTO reserva (fecha_inicio, fecha_fin, habitacion_id, estado)
@@ -31,4 +20,8 @@ VALUES ('2025-04-20', '2025-04-24', 2, 'RESERVADA');
 
 
 -- query para ver si la habitaciones disponibles
+
+SELECT * FROM reservas 
+WHERE fecha_inicio BETWEEN '2025-04-01' AND '2025-04-30';
+
 

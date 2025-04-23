@@ -84,6 +84,7 @@ public class HabitacionServiceImpl implements HabitacionService {
         HabitacionResponseDTO dto = habitacionMapper.toHabitacionResponseDTO(habitacion);
 
         return new ResponseDTO(ResponseMessage.SUCCESSFUL_MODIFICATION.getMessage(), dto);
+
     }
 
     @Override

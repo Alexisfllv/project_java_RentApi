@@ -15,5 +15,4 @@ public interface HabitacionRepository extends JpaRepository<Habitacion, Long> {
    // jpql
    List<Habitacion> findByEstado(EstadoHabitacion estado);
 
-
 }
